@@ -4,6 +4,7 @@ import "react-circular-progressbar/dist/styles.css";
 import "./styles/rosco.css";
 
 import cabeceraAudio from "../../assets/audios/cabecera.mp3";
+import { useLocation } from "react-router-dom";
 
 import audioA from "../../assets/audios/A.mp3";
 import audioB from "../../assets/audios/B.mp3";
@@ -41,10 +42,12 @@ const Rosco = () => {
   const [juegoIniciado, setJuegioIniciado] = useState(false); //se inicializa a false porque al cargar la pagina el juego no se ha inicializado
   const [tiempoRestante, setTiempoRestante] = useState(180); // valor inicial para temporizador
   const [letraActual, setLetraActual] = useState(null); // empieza en la A (posición 0 del array)
-  const [respuestaUsuario, setRespuestaUsuario] = useState(""); //Guarda la respuesta del usuario
-  const [resultado, setResultado] = useState("");
+  const [respuestaUsuario, setRespuestaUsuario] = useState(""); //Guarda la respuesta del usuario)
   const [estadoLetras, setEstadoLetras] = useState(Array(letters.length).fill("pendiente"));
   const audioRef = useRef(null);
+
+  const location = useLocation();
+  const [animacionIntro, setAnimacionIntro] = useState(false);
 
   const audioCabeceraRef = useRef(null);
 
@@ -108,7 +111,15 @@ const Rosco = () => {
     "z-index",  // para la Z (posición 26)
   ];
 
-
+  useEffect(() => {
+    if (location.state?.animar) {
+      setAnimacionIntro(true);
+      if (audioCabeceraRef.current) {
+        audioCabeceraRef.current.currentTime = 0;
+        audioCabeceraRef.current.play();
+      }
+    }
+  }, [location.state]);
 
   useEffect(() => {
     //este useEffect se ejecuta para el temporizador
@@ -129,8 +140,14 @@ const Rosco = () => {
   }, [juegoIniciado]);
 
   const handleStartGame = () => {
-    setTiempoRestante(180); // cada vez que es nueva partida se reinicia el temporizador
-    setLetraActual(0); // mostrar la A
+    if (audioCabeceraRef.current) {
+      audioCabeceraRef.current.pause();
+      audioCabeceraRef.current.currentTime = 0;
+    }
+  
+    setAnimacionIntro(false);
+    setTiempoRestante(180);
+    setLetraActual(0);
     setJuegioIniciado(true);
   };
 
@@ -197,36 +214,34 @@ const Rosco = () => {
 
   return (
     <>
-      <div className="roscoContainer">
+      <div className={`roscoContainer ${animacionIntro ? 'animacionIntro' : ''}`}>
         <audio ref={audioCabeceraRef} src={cabeceraAudio} />
         <audio ref={audioRef}></audio>
         <div className="roscoWrapper">
-          {/* Aquí se genera la posición de cada letra en círculo: */}
-          {/* •	angle: calcula el ángulo para cada letra, repartiendo los 360° del círculo. */}
-          {/* •	radius: qué tan grande es el círculo. */}
-          {/* •	Math.cos() y Math.sin() se usan para calcular la posición X e Y en base al ángulo. */}
+          <div className="roscoContent">
+            {letters.map((letter, index) => {
+              const angle = (360 / letters.length) * index - 90;
+              const radius = 220; // Increased radius for a larger circle
+              const x = radius * Math.cos((angle * Math.PI) / 180);
+              const y = radius * Math.sin((angle * Math.PI) / 180);
 
-          {letters.map((letter, index) => {
-            const angle = (360 / letters.length) * index - 90;
-            const radius = 220; // Increased radius for a larger circle
-            const x = radius * Math.cos((angle * Math.PI) / 180);
-            const y = radius * Math.sin((angle * Math.PI) / 180);
-
-            return (
-              <div
-                key={index}
-                className={`roscoLetter 
-                  ${index === letraActual ? "letraActiva" : ""} 
-                  ${estadoLetras[index] === "correcta" ? "letraCorrecta" : ""} 
-                  ${estadoLetras[index] === "incorrecta" ? "letraIncorrecta" : ""}`}
-                style={{
-                  transform: `translate(${x + 230}px, ${y + 100}px)`, // Adjusted center (250 = half of 500px wrapper)
-                }}
-              >
-                {letter}
-              </div>
-            );
-          })}
+              return (
+                <div
+                  key={index}
+                  className={`roscoLetter 
+                    ${index === letraActual ? "letraActiva" : ""} 
+                    ${estadoLetras[index] === "correcta" ? "letraCorrecta" : ""} 
+                    ${estadoLetras[index] === "incorrecta" ? "letraIncorrecta" : ""}`}
+                  style={{
+                    top: `${y + 100}px`,
+                    left: `${x + 230}px`
+                  }}
+                >
+                  {letter}
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div className="roscoInfo">
           {!juegoIniciado && (

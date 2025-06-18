@@ -6,7 +6,7 @@ const StartScreen = () => {
   const navigate = useNavigate();
 
   const handleStart = () => {
-    navigate('/rosco');
+    navigate('/rosco', { state: { animar: true } });
   };
 
   return (
