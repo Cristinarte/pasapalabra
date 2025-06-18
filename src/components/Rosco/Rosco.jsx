@@ -40,7 +40,7 @@ const letters = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
 
 const Rosco = () => {
   const [juegoIniciado, setJuegioIniciado] = useState(false); //se inicializa a false porque al cargar la pagina el juego no se ha inicializado
-  const [tiempoRestante, setTiempoRestante] = useState(180); // valor inicial para temporizador
+  const [tiempoRestante, setTiempoRestante] = useState(220); // valor inicial para temporizador
   const [letraActual, setLetraActual] = useState(null); // empieza en la A (posición 0 del array)
   const [respuestaUsuario, setRespuestaUsuario] = useState(""); //Guarda la respuesta del usuario)
   const [estadoLetras, setEstadoLetras] = useState(Array(letters.length).fill("pendiente"));
@@ -97,7 +97,7 @@ const Rosco = () => {
     "less",     // para la L (posición 11)
     "mysql", // para la M (posición 12)
     "node",  // para la N (posición 13)
-    "ñ",     // para la Ñ (posición 14)
+    "diseñar",     // para la Ñ (posición 14)
     "orientado a objetos", // para la O (posición 15)
     "php",     // para la P (posición 16)
     "sql",   // para la Q (posición 17)      
@@ -147,7 +147,7 @@ const Rosco = () => {
     }
   
     setAnimacionIntro(false);
-    setTiempoRestante(180);
+    setTiempoRestante(220);
     setLetraActual(0);
     setJuegioIniciado(true);
   };
@@ -265,7 +265,7 @@ const Rosco = () => {
               <div className="circularTimerWrapper">
                 <CircularProgressbar
                   value={tiempoRestante}
-                  maxValue={180}
+                  maxValue={220}
                   text={`${tiempoRestante}`}
                   className="circularTimer"
                 />
