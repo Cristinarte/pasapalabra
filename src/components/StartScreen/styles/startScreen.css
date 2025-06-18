@@ -1,0 +1,35 @@
+.startScreenContainer {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #0caaf8;
+}
+
+h1 {
+    font-size: 3rem;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.startButton {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #0caaf8;
+    background-color: white;
+    border: 3px solid #0caaf8;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 30px;
+}
+
+.startButton:hover {
+    background-color: #0caaf8;
+    color: white;
+    transform: scale(1.05);
+}
