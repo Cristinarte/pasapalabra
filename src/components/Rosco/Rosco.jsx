@@ -44,6 +44,7 @@ const Rosco = () => {
   const [letraActual, setLetraActual] = useState(null); // empieza en la A (posición 0 del array)
   const [respuestaUsuario, setRespuestaUsuario] = useState(""); //Guarda la respuesta del usuario)
   const [estadoLetras, setEstadoLetras] = useState(Array(letters.length).fill("pendiente"));
+  const [mostrarBotonComenzar, setMostrarBotonComenzar] = useState(false);
   const audioRef = useRef(null);
 
   const location = useLocation();
@@ -212,6 +213,14 @@ const Rosco = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMostrarBotonComenzar(true);
+    }, 15500); // 15.5 segundos
+  
+    return () => clearTimeout(timer); // limpieza
+  }, []);
+
   return (
     <>
       <div className={`roscoContainer ${animacionIntro ? 'animacionIntro' : ''}`}>
@@ -244,7 +253,7 @@ const Rosco = () => {
           </div>
         </div>
         <div className="roscoInfo">
-          {!juegoIniciado && (
+          {!juegoIniciado && mostrarBotonComenzar && (
             <button className="roscoStartBtn" onClick={handleStartGame}>
               Comenzar
             </button>
